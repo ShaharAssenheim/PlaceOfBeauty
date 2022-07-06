@@ -1,0 +1,105 @@
+﻿@model IEnumerable<Kristin2.Models.CustomerModel>
+
+
+
+@{
+    ViewBag.Title = "CustomersList";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<div class="container-fluid h-100 mt-5 text-center">
+    <br />
+    <br />
+
+    <h2 class="mb-3">רשימת לקוחות</h2>
+
+    <p>
+        @Html.ActionLink("הוספה", "Register", "Account", null, new { @class = "btn btn-lg btn-secondary" })
+    </p>
+
+    <div class="form-signin">
+        <input type="text" class="form-control" id="txtSearch" placeholder="חפש...">
+    </div>
+    
+
+
+
+    <div class="table-responsive">
+
+        <table class="table table-bordered text-center w-75">
+
+            <tr>
+
+
+                <th>שם פרטי</th>
+                <th>שם משפחה</th>
+                <th>טלפון</th>
+                <th>אימייל</th>
+                <th>שם משתמש</th>
+                <th>סיסמה</th>
+                <th>קוד משתמש</th>
+                <th></th>
+            </tr>
+
+
+            @foreach (var item in Model)
+            {
+
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.FirstName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.LastName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Phone)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Email)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.UserName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Password)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.AdminCode)
+                </td>
+                <td>
+                    @Html.ActionLink("ערוך", "CustomersPage", new { id = item.ID }, new { @class = "btn btn-sm btn-secondary" }) |
+                    @Html.ActionLink("מחק", "Delete", new { id = item.ID }, new { @class = "btn btn-sm btn-secondary" })
+                </td>
+            </tr>
+
+            }
+
+        </table>
+
+    </div>
+</div>
+
+
+@section Scripts{
+    <script>
+        $("#txtSearch").keyup(function () {
+            var value = this.value.toLowerCase().trim();
+
+            $("table tr").each(function (index) {
+                if (!index) return;
+                $(this).find("td").each(function () {
+                    var id = $(this).text().toLowerCase().trim();
+                    var not_found = (id.indexOf(value) == -1);
+                    $(this).closest('tr').toggle(!not_found);
+                    return not_found;
+                });
+            });
+        });
+    </script>
+   }
+
+
+
+

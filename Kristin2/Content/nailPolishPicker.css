@@ -1,0 +1,55 @@
+﻿
+
+body {
+    background-image: linear-gradient(to right, #ffecd2 0%, #fcb69f 100%);
+    color: #666;
+    font-family: sans-serif;
+}
+
+
+	#handSVG{
+	max-width: 70vw;
+	max-height: 70vh;
+
+}
+
+#bottleSVG {
+	width: 100%;
+	max-width: 80px;
+	margin:  20px 50px 20px;
+	cursor: pointer;
+}
+
+
+
+
+
+.sp-button-container.sp-cf {
+	display: none;
+}
+.sp-picker-container {
+	width: 2000px;
+	border-left: solid 1px #fff;
+}
+
+.nail, .contents {
+	fill: #F7F3F0;
+}
+
+
+
+
+
+
+
+p {
+	cursor: pointer;
+}
+	span{
+	height: 10px;
+	width: 10px;
+	vertical-align: middle;
+	margin-bottom: 2px;
+	background: #DBB595;
+}
+

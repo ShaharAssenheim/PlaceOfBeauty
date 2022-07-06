@@ -1,0 +1,175 @@
+﻿@using Kristin2.Models;
+@model  Tuple<CustomerModel, List<CalanderModel>>
+
+@{
+    ViewBag.Title = "CustomersPage";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<link href="@Url.Content("~/Content/customerPage.css")" rel="stylesheet" />
+
+<div class="container bootstrap snippet mt-5">
+    <div class="row mt-5">
+        <div class="col-sm-10"><h1 id="ProfileName">@Model.Item1.FirstName @Model.Item1.LastName</h1></div>
+
+    </div>
+    <div class="row">
+        <div class="col-sm-3">
+            <!--left col-->
+
+            <div class="text-center">
+                <img src="@Model.Item1.Image" class="avatar img-circle img-thumbnail mb-2" alt="avatar">
+
+                <!-- COMPONENT START -->
+                <div class="form-group">
+                    <div class="input-group input-file" name="Fichier1">
+                        <input id="imageInput" type="text" class="form-control" name="Image" placeholder='בחר תמונה...' />
+                        <button id="imageBtn" class="btn btn-secondary btn-choose" type="button">העלה</button>
+                    </div>
+                </div>
+
+            </div>
+
+            <div id="spinner">
+                <img id="img-spinner" src="@Url.Content("~/Content/imgs/loader.gif")" alt="Loading..." />
+            </div>
+
+        </div><!--/col-3-->
+        <div class="col-sm-9">
+            <ul class="nav nav-tabs mb-4 border-light">
+                <li class="active"><a data-toggle="tab" href="#home" class="nav-link btn-secondary ml-1">פרטים אישיים</a></li>
+                <li><a data-toggle="tab" href="#messages" class="nav-link btn-secondary">היסטוריית טיפולים</a></li>
+            </ul>
+
+            <div class="tab-content">
+                <div class="tab-pane active" id="home">
+
+                    @using (Html.BeginForm("Edit", "Customer"))
+                    {
+                        <div class="form-group" style="display:none">
+                            <div class="col-xs-6">
+                                <label for="ID" class="float-right"><h4>מספר משתמש</h4></label>
+                                <input type="text" class="form-control" name="ID" id="ID" value="@Model.Item1.ID">
+
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-xs-6">
+                                <label for="UserName" class="float-right"><h4>שם משתמש</h4></label>
+                                <input type="text" class="form-control" name="UserName" id="UserName" placeholder="@Model.Item1.UserName" readonly>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-xs-6">
+                                <label for="FirstName" class="float-right"><h4>שם פרטי</h4></label>
+                                <input type="text" class="form-control" name="FirstName" id="FirstName" placeholder="@Model.Item1.FirstName" readonly>
+                            </div>
+                        </div>
+                        <div class="form-group">
+
+                            <div class="col-xs-6">
+                                <label for="LastName" class="float-right"><h4>שם משפחה</h4></label>
+                                <input type="text" class="form-control" name="LastName" id="LastName" placeholder="@Model.Item1.LastName" readonly>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+
+                            <div class="col-xs-6">
+                                <label for="Phone" class="float-right"><h4>טלפון</h4></label>
+                                <input type="text" class="form-control" name="Phone" id="Phone" placeholder="@Model.Item1.Phone" readonly>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+
+                            <div class="col-xs-6">
+                                <label for="Email" class="float-right"><h4>אימייל</h4></label>
+                                <input type="email" class="form-control" name="Email" id="Email" placeholder="@Model.Item1.Email" readonly>
+                            </div>
+                        </div>
+                        <div class="form-group">
+
+                            <div class="col-xs-6">
+                                <label for="Password" class="float-right"><h4>סיסמה</h4></label>
+                                <input type="password" class="form-control" name="Password" id="Password" placeholder="@Model.Item1.Password" readonly>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-xs-12">
+                                <br>
+                                <button id="edit" class="btn btn-lg btn-secondary" type="reset"><i class="glyphicon glyphicon-repeat"></i> ערוך</button>
+                                <button class="btn btn-lg btn-secondary" type="submit"><i class="glyphicon glyphicon-ok-sign"></i> שמור</button>
+
+                            </div>
+                        </div>
+                    }
+
+                    <hr>
+
+                </div><!--/tab-pane-->
+                <div class="tab-pane" id="messages">
+
+                    <div class="table-responsive">
+                        <table class="table table-bordered text-center w-75">
+
+                            <tr>
+                                <th>טיפול</th>
+                                <th>תאריך</th>
+                                <th>תשלום</th>
+                            </tr>
+
+                          
+                          
+                            @for (int i = 0; i < Model.Item2.Count() - 1; i++)
+                            {
+                                <tr>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => Model.Item2[i].Subject)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => Model.Item2[i].StartTime)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => Model.Item2[i].Price)
+                                    </td>
+                                </tr>
+                            }
+                                <tr>
+                                    <td>
+                                      
+                                    </td>
+                                    <td>
+                                        סה"כ
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => Model.Item2[Model.Item2.Count() - 1].Price)
+                                    </td>
+                                </tr>
+                        </table>
+
+                    </div>
+
+                </div><!--/tab-pane-->
+            </div><!--/tab-pane-->
+        </div><!--/tab-content-->
+    </div><!--/col-9-->
+</div><!--/row-->
+
+
+@section scripts{
+    <script>
+        $(document).ready(function () {
+            $('#edit').click(function () {
+                $("input").removeAttr("readonly");
+                $("input").css('background-color', '#faf3e1');
+
+            });
+        });
+
+
+    </script>
+}

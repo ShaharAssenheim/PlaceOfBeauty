@@ -1,0 +1,148 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
+    <title>Kristina-Place Of Beauty</title>
+    <link rel="shortcut icon" href="~/Content/imgs/ic.png">
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+    <link rel="shortcut icon" href="~/Content/gijgo.min.css">
+
+
+</head>
+<body>
+    <nav class="fixed-top navbar navbar-dark navbar-expand-md mb-4" id="mainNavbar">
+
+        <a href="/Home/Index" class="navbar-brand m-0 ml-1"><img src="~/Content/imgs/logo.png" class="shadow-lg " /></a>
+        @if (Session["FirstName"] != null)
+        {
+            <a href="/Customer/CustomersPage" class="nav-link d-md-none d-block" id="nameMobile">שלום @Session["FirstName"]</a>
+        }
+        <button class="navbar-toggler" data-toggle="collapse" data-target="#navLinks" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navLinks">
+            <ul class="navbar-nav p-0">
+                <li class="nav-item"><a href="/Calander/Calander" class="nav-link">הזמן תור</a></li>
+                <li class="nav-item"><a href="/Customer/CustomersList" class="nav-link">לקוחות</a></li>
+                <li class="nav-item"><a href="/Home/Gallery" class="nav-link">גלריה</a></li>
+                <li class="nav-item">
+                    <div class="dropdown">
+                        <a class="nav-link">בחרי לק</a>
+                        <div class="dropdown-content">
+                            <a href="/Home/Colors" class="nav-link">צבעים</a>
+                            <a href="/Home/NailPolishPicker" class="nav-link">הדמיה</a>
+                        </div>
+                    </div>
+                </li>
+
+            </ul>
+            @if (Session["FirstName"] != null)
+            {
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item d-none d-md-block" id="nameBig"><a href="/Customer/CustomersPage" class="nav-link ">שלום @Session["FirstName"]</a></li>
+                    <li class="nav-item"><a href="/Account/Logout" class="nav-link">התנתק</a></li>
+                </ul>
+
+            }
+            else
+            {
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item"><a href="/Account/Login" class="nav-link ">כניסה</a></li>
+                    <li class="nav-item"><a href="/Account/Register" class="nav-link">הרשמה</a></li>
+                </ul>
+            }
+        </div>
+    </nav>
+
+
+
+    @RenderBody()
+
+
+    <section id="footer">
+        <div class="container-fluid">
+            <div class="row text-center">
+                <div class="col-xs-12 col-sm-4 col-md-4">
+                    <h5 class="mt-5">שעות פתיחה</h5>
+                    <ul class="list-unstyled time-list pl-5">
+                        <li>ראשון: 20:00 - 09:00</li>
+                        <li>שני: 20:00 - 09:00</li>
+                        <li>שלישי: 20:00 - 09:00</li>
+                        <li>רביעי: 20:00 - 09:00</li>
+                        <li>חמישי: 20:00 - 09:00</li>
+                        <li>שישי: 18:00 - 09:00</li>
+                        <li>שבת: סגור</li>
+                    </ul>
+                </div>
+                <div class="col-xs-12 col-sm-4 col-md-4">
+                    <img src="~/Content/imgs/kris_logo.jpg" class="mt-5 mb-3 rounded shadow-lg " />
+                    <p class="mb-0">
+                        קריסטינה יגודייבה קוסמטיקאית רפואית בקיבוץ גניגר,
+                        בעלת ניסיון עשיר וידע מעמיק בתחום.
+                    </p>
+                    <p class="mb-0">טלפון:0523060735</p>
+                    <p class="mb-0">כתובת: קיבוץ גניגר</p>
+                    <p class="mb-0">מייל:kristina@gmail.com</p>
+                    <p class="mb-0">פייסבוק: Kris_luna</p>
+                    <p class="mb-0">אינסטגרם: Kristina_place_of_beauty</p>
+                </div>
+                <div class="col-xs-12 col-sm-4 col-md-4">
+                    <h5 class="mt-5"></h5>
+                    <ul class="list-unstyled quick-links pl-5">
+                        <li><a href="/Account/Register">הרשמה</a></li>
+                        <li><a href="/Account/Login">כניסה</a></li>
+                        <li><a href="/Home/Gallery">גלריה</a></li>
+                        <li><a href="/Calander/Calander">הזמן תור</a></li>
+                        <li><a href="/Home/NailPolishPicker">בחרי לק</a></li>
+
+                    </ul>
+                </div>
+            </div>
+            <div class="row pl-5">
+                <div class="col-xs-12 col-sm-12 col-md-12 ">
+                    <ul class="list-unstyled list-inline social text-center">
+                        <li class="list-inline-item"><a href="#"><i class="fa fa-facebook"></i></a></li>
+                        <li class="list-inline-item"><a href="#"><i class="fa fa-twitter"></i></a></li>
+                        <li class="list-inline-item"><a href="#"><i class="fa fa-instagram"></i></a></li>
+                        <li class="list-inline-item"><a href="#"><i class="fa fa-google-plus"></i></a></li>
+                        <li class="list-inline-item"><a href="#" target="_blank"><i class="fa fa-envelope"></i></a></li>
+                    </ul>
+                </div>
+
+            </div>
+
+
+
+            <div class="row ">
+                <div class="col-xs-12 col-sm-12 col-md-12  mt-sm-2 text-center text-white">
+                    <p id="copyrights">
+                        &copy Kristina Place Of Beauty @DateTime.Now.Year | <a href="https://www.linkedin.com/in/shahar-assenheim/"> Shahar Assenheim Software.</a>
+                    </p>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @RenderSection("scripts", required: false)
+    @section scripts{
+
+        <script src="~/Scripts/aos.js"></script>
+        <script>
+
+            AOS.init({
+                offset: 400,
+                duration: 1000,
+                easing: 'ease-in',
+                once: true,
+            });
+
+        </script>
+    }
+</body>
+</html>

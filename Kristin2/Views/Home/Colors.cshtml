@@ -1,0 +1,86 @@
+﻿@model IEnumerable<string>
+@{
+    ViewBag.Title = "Colors";
+
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+
+
+<div id="gallery-section">
+    <div class="inner-width">
+        <h1>הצבעים שלי</h1>
+        <div class="border "></div>
+        @if (Session["AdimCode"] == "Admin")
+        {
+            using (Html.BeginForm("UploadToColors", "Home", FormMethod.Post, new { enctype = "multipart/form-data" }))
+            {
+    <div class="text-center">
+        <label class="btn btn-sm btn-secondary">
+            בחר תמונות להעלאה
+            @Html.TextBox("file", "", new { type = "file", style = "display: none;", multiple = "multiple" })
+        </label>
+        <label class="btn btn-sm btn-secondary " >
+            העלה תמונות
+            <input type="submit" value="Upload" hidden />
+        </label>
+        <label class="btn btn-sm btn-secondary">
+            מחק
+            <input type="button" id="getMessage" name="GetMessage" value="GetMessage" hidden onclick="OpenDelete()" />
+
+        </label>
+
+        @ViewBag.Message
+
+    </div>
+            }
+        }
+
+            <div class="row text-center ">
+                @foreach (var item in Model)
+                {
+                <div class="col-lg-3 col-md-4 col-sm-6 mb-1 p-1" data-aos="zoom-out-down">
+                    <a href="@Url.Action("ColorsDel", "Home",new {link=item })" id="del" style="display:none"><span class="close">&times;</span></a>
+                    <a href="@item" class="image">
+                        <img src="@item" alt="">
+                    </a>
+                </div>
+                }
+            </div>
+        </div>
+</div>
+
+
+@section scripts{
+
+    <script src="~/Scripts/jquery.magnific-popup.min.js"></script>
+    <script src="~/Scripts/aos.js"></script>
+    <script>
+        AOS.init({
+            offset: 200,
+            duration: 1000,
+            easing: 'ease-in-sine',
+            once: true,
+
+        });
+    </script>
+    <script>
+        $(".image").magnificPopup({
+
+            type: 'image',
+            gallery: {
+                enabled: true
+            }
+        });
+
+        function OpenDelete() {
+            var x = document.getElementById("del");
+            if (x.style.display === "none") {
+                $('[id=del]').css('display', 'block');
+            } else {
+                $('[id=del]').css('display', 'none');
+            }
+        }
+    </script> 
+}

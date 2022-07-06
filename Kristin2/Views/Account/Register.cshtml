@@ -1,0 +1,87 @@
+﻿@model Kristin2.Models.CustomerModel
+
+@{
+    /**/
+
+    ViewBag.Title = "Register";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<link href="@Url.Content("~/Content/themes/base/jquery-ui.min.css")" rel="stylesheet" />
+
+
+
+
+<div class="row">
+    <div class="col-md-12">
+        <div id="spinner">
+            <img id="img-spinner" src="@Url.Content("~/Content/imgs/loader.gif")" alt="Loading..." />
+        </div>
+        @using (Html.BeginForm("Create", "Customer"))
+        {
+            <div class="form-signin">
+                <br />
+                <br />
+                <h1 class="h3 mt-5 float-right font-weight-normal">נא מלא פרטים</h1>
+
+
+                <label for="inputUsername" class="sr-only">שם משתמש</label>
+                <input type="text" id="inputUsername" class="form-control" name="UserName" placeholder="שם משתמש" required  oninvalid="this.setCustomValidity('הכנס שם משתמש')" oninput="this.setCustomValidity('')">
+
+                <label for="inputPassword" class="sr-only">סיסמה</label>
+                <input type="password" id="inputPassword" class="form-control" name="Password" placeholder="סיסמה" required  oninvalid="this.setCustomValidity('הכנס סיסמה')" oninput="this.setCustomValidity('')">
+
+                <label for="inputFirstname" class="sr-only">שם פרטי</label>
+                <input type="text" id="inputFirstname" class="form-control" name="FirstName" placeholder="שם פרטי" required  oninvalid="this.setCustomValidity('הכנס שם פרטי')" oninput="this.setCustomValidity('')">
+
+                <label for="inputLastname" class="sr-only">שם משפחה</label>
+                <input id="inputLastname" type="text" class="form-control" name="LastName" placeholder="שם משפחה" required  oninvalid="this.setCustomValidity('הכנס שם משפחה')" oninput="this.setCustomValidity('')">
+
+                <label for="inputEmail" class="sr-only">טלפון</label>
+                <input id="inputPhone" type="text" class="form-control" name="Phone" placeholder="טלפון" required  oninvalid="this.setCustomValidity('הכנס מספר טלפון')" oninput="this.setCustomValidity('')">
+
+
+
+                <label for="inputEmail" class="sr-only">אימייל</label>
+                <input id="inputEmail" type="text" class="form-control" name="Email" placeholder="אימייל" >
+
+                <label for="datepicker" class="sr-only">טיפול אחרון</label>
+                <input id="datepicker" class="date-picker form-control" type="text" name="Lasttime" placeholder="טיפול אחרון" />
+
+                <div class="form-group">
+                    <div class="input-group input-file" name="Fichier1">
+                        <input id="imageInput" type="text" class="form-control" name="Image" placeholder='בחר תמונה...' />
+                        <button id="imageBtn" class="btn btn-secondary btn-choose" type="button">העלה</button>
+                    </div>
+                </div>
+
+                <button style="background-image: linear-gradient(to right, #ff8177 0%, #ff867a 0%, #ff8c7f 21%, #f99185 52%)" class="btn btn-lg btn-secondary btn-block" type="submit">הירשם</button>
+            </div>
+        }
+
+
+    </div>
+</div>
+
+@section scripts{
+    <script src="@Url.Content("~/Scripts/jquery-ui-1.12.1.min.js")"></script>
+    <script src="@Url.Content("~/Scripts/imageUpload.js")"></script>
+    <script src="~/Scripts/datepicker-he.js"></script>
+    <script>
+        $(function () {
+            // This will make every element with the class "date-picker" into a DatePicker element
+            $('.date-picker').datepicker();
+
+            $.datepicker.setDefaults(
+                $.extend(
+                    { 'dateFormat': 'dd-mm-yy' },
+                    $.datepicker.regional['he'],
+
+                )
+            );
+
+        })
+    </script>
+
+
+}

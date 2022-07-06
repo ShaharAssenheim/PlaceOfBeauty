@@ -1,0 +1,395 @@
+﻿@using Kristin2.Models;
+@model  Tuple<List<CustomerModel>, List<ProductModel>>
+
+@{
+    /**/
+
+    ViewBag.Title = "Calander";
+}
+<br />
+<br />
+<br />
+<div class="container-fluid mt-5  text-center">
+
+    <div id="calender" class="p-5"></div>
+
+    <div id="myModal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header ">
+                    <h4 class="modal-title float-right"><span id="eventTitle"></span></h4>
+                    <button type="button" class="close order-1" data-dismiss="modal">&times;</button>
+                </div>
+                <div class="modal-body">
+
+                    <p id="pDetails"></p>
+                </div>
+                <div class="modal-footer">
+                    <button id="btnDelete" class="btn btn-secondary btn-sm ">מחק</button>
+                    <button id="btnEdit" class="btn btn-secondary btn-sm " style="margin-right:5px;">ערוך</button>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="myModalSave" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title float-right">טיפול חדש</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form class="form-horizontal">
+                    <input type="hidden" id="hdEventID" value="0" />
+                    <div class="form-group">
+                        <label class="float-right">טיפול</label>
+                        <select id="txtSubject" class="form-control">
+
+                            @foreach (var item in Model.Item2)
+                            {
+                                <option>
+                                    @Html.DisplayFor(modelItem => item.Product_name)
+                                </option>
+                            }
+                        </select><span id="Subject-msg" ></span>
+                    </div>
+                    <div class="form-group">
+                        <label class="float-right">לקוח/ה</label>
+
+                        <select id="txtCustomer" class="form-control">
+                      
+                            @foreach (var item in Model.Item1)
+                            {
+                                <option>
+                                    @Html.DisplayFor(modelItem => item.FirstName) @Html.DisplayFor(modelItem => item.LastName)
+                                </option>
+                            }
+                        </select><span id="customer-msg"></span>
+                    </div>
+                    <div class="form-group">
+                        <label class="float-right">תאריך</label>
+                        <input readonly type="text" id="txtDate" class="form-control" />
+                    </div>
+                    <div class="form-group">
+                        <label class="float-right">התחלה</label>
+                        <input type="text" id="txtStart" class="date-picker time-picker form-control" /><span id="start-msg"></span>
+                    </div>
+                   
+                    <div class="form-group" id="divEndDate" >
+                        <label class="float-right">סיום</label>
+                        <input type="text" id="txtEnd" class=" form-control" />
+                    </div>
+                    <div class="form-group">
+                        <label class="float-right">פרטים</label>
+                        <textarea id="txtDescription" rows="3" class="form-control"></textarea>
+                    </div>
+
+                    <button type="button" id="btnSave" class="btn btn-secondary">שמור</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<link href="@Url.Content("~/Content/themes/base/jquery-ui.min.css")" rel="stylesheet" />
+<link href="@Url.Content("~/Content/fullcalendar.min.css")" rel="stylesheet" />
+<link href="@Url.Content("~/Content/fullcalendar.print.css")" rel="stylesheet" media="print" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-ui-timepicker-addon/1.6.3/jquery-ui-timepicker-addon.min.css" />
+
+
+@section Scripts{
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
+    <script src="@Url.Content("~/Scripts/jquery-ui-1.12.1.min.js")"></script>
+    <script src="@Url.Content("~/Scripts/fullcalendar.min.js")"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-ui-timepicker-addon/1.6.3/jquery-ui-timepicker-addon.min.js"></script>
+    <script src='~/Scripts/he.js'></script>
+
+    <script>
+        $(document).ready(function () {
+            var events = [];
+            var selectedEvent = null;
+            FetchEventAndRenderCalendar();
+            //main function of Calander
+            function FetchEventAndRenderCalendar() {
+                events = [];
+                $.ajax({
+                    type: "GET",
+                    url: "/Calander/GetEvents",
+                    success: function (data) {
+                        $.each(data, function (i, v) {
+                            events.push({
+                                eventID: v.EventID,
+                                title: v.Subject,
+                                description: v.Description,
+                                start: moment(v.StartTime),
+                                end: moment(v.EndTime) ,
+                                color: v.ThemeColor,
+                                customer: v.Customer
+                            });
+                        })
+                        GenerateCalender(events);
+                    },
+                    error: function (error) {
+                        alert('failed');
+                    }
+                })
+            }
+            //function build the calander with events data
+            function GenerateCalender(events) {
+                $('#calender').fullCalendar('destroy');
+                $('#calender').fullCalendar({
+                    contentHeight: 500,
+                    defaultDate: new Date(),
+                    timeFormat: 'HH:mm',
+                    locale: 'he',
+                    header: {
+                        left: 'next,prev today',
+                        center: 'title',
+                        right: 'month,basicWeek,basicDay,agenda'
+                    },
+                    views: {
+                        week: {
+                            titleFormat: ' D/MM/YYYY',
+                            titleRangeSeparator: ' - ',
+                        },
+                        day: {
+                            titleFormat: ' D/MM/YYYY'
+                        },
+                        agenda: {
+                            titleFormat: ' D/MM/YYYY'
+                        }
+                    },
+                    displayEventEnd: true,
+                    selectLongPressDelay: 25,
+                    eventLimit: true,
+                    eventColor: '#378006',
+                    events: events,
+                    slotEventOverlap: false,
+                    eventClick: function (calEvent, jsEvent, view) {
+                        selectedEvent = calEvent;
+                        $('#myModal #eventTitle').text(calEvent.title +" - "+ calEvent.start.format("DD/MM/YYYY"));
+                        var $description = $('<div/>');
+                        $description.append($('<p/>').html('<b>לקוח/ה: </b>' + calEvent.customer));
+                        $description.append($('<p/>').html('<b>התחלה: </b>' + calEvent.start.format("HH:mm")));
+                        if (calEvent.end != null) {
+                            $description.append($('<p/>').html('<b>סיום: </b>' + calEvent.end.format("HH:mm")));
+                        }
+                        $description.append($('<p/>').html('<b>תאור: </b>' + calEvent.description));
+                        $('#myModal #pDetails').empty().html($description);
+                        $('#myModal').modal();
+                    },
+                    selectable: true,
+                    select: function (start, end) {
+                        selectedEvent = {
+                            eventID: 0,
+                            title: '',
+                            description: '',
+                            start: start,
+                            end: end,
+                            color: '',
+                            customer:''
+                        };
+                        openAddEditForm();
+                        $('#calendar').fullCalendar('unselect');
+                    },
+                    editable: true,
+                    eventDrop: function (event) {
+                        var data = {
+                            EventID: event.eventID,
+                            Subject: event.title,
+                            StartTime: event.start.format('DD/MM/YYYY HH:mm'),
+                            EndTime: event.end != null ? event.end.format('DD/MM/YYYY HH:mm') : null,
+                            Description: event.description,
+                            ThemeColor: event.color,
+                            Customer: event.customer
+                        };
+                        SaveEvent(data);
+                    }
+                })
+            }
+            //Open modal dialog for edit event
+            $('#btnEdit').click(function () {
+                openAddEditForm();
+            })
+            //Delete event from the calander
+            $('#btnDelete').click(function () {
+                if (selectedEvent != null) {
+                    $.ajax({
+                        type: "POST",
+                        url: '/Calander/DeleteEvent',
+                        data: { 'eventID': selectedEvent.eventID },
+                        success: function (data) {
+                            if (data.status) {
+                                //Refresh the calender
+                                FetchEventAndRenderCalendar();
+                                $('#myModal').modal('hide');
+                            }
+                        },
+                        error: function () {
+                            alert('Failed');
+                        }
+                    })
+                }
+            })
+            //pick the time for new event
+            $('#txtStart').timepicker({
+                timeFormat: 'HH:mm',
+                dateFormat: 'd-mm-yy',
+                hourText: "שעה",
+                minuteText: "דקה",
+                timeText: "זמן",
+                isRTL: true,
+                timeOnlyTitle: "בחר שעה",
+                closeText: 'אישור',
+                showSecond: false,
+                currentText: "עכשיו",
+            });
+            //attach color and douration to treatment
+            var colorTm;
+            var dauration;
+            var price;
+            $('#txtSubject').change(function () {
+                if ($('#txtSubject').val().trim() == "טיפול פנים") {
+                    colorTm = "#a5ffa5";
+                    dauration = 120;
+                    price = 200;
+                }
+                else if ($('#txtSubject').val().trim() == "לק ג'ל") {
+                    colorTm = "#bdffff";
+                    dauration = 60;
+                    price = 80;
+                }
+                else if ($('#txtSubject').val().trim() == "פדיקור") {
+                    colorTm = "#ffff9f";
+                    dauration = 60;
+                    price = 100;
+                }
+                else if ($('#txtSubject').val().trim() == "בניית ציפורניים") {
+                    colorTm = "#ffdaa1";
+                    dauration = 120;
+                    price = 200;
+                }
+                else if ($('#txtSubject').val().trim() == "שעווה") {
+                    colorTm = "#ff6f69";
+                    dauration = 60;
+                    price = 60;
+                }
+            });
+
+           
+            
+            //initilize the Add/edit form
+            function openAddEditForm() {
+                if (selectedEvent != null) {
+                    $('#hdEventID').val(selectedEvent.eventID);
+                    $('#txtSubject').val(selectedEvent.title);
+                    $('#txtDate').val(selectedEvent.start.format('DD/MM/YYYY'));
+                    $('#txtStart').val(selectedEvent.start.format('HH:mm'));
+                    $('#txtEnd').val(selectedEvent.end.format('HH:mm'));
+                    $('#txtDescription').val(selectedEvent.description);
+                    $('#txtCustomer').val(selectedEvent.customer);
+
+                    if (document.getElementById('Subject-msg').hasChildNodes()) {
+                        document.getElementById('Subject-msg').lastChild.remove()
+                    }
+                    if (document.getElementById('customer-msg').hasChildNodes()) {
+                        document.getElementById('customer-msg').lastChild.remove()
+                    }
+                    if (document.getElementById('start-msg').hasChildNodes()) {
+                        document.getElementById('start-msg').lastChild.remove()
+                    }
+                }
+                $('#myModal').modal('hide');
+                $('#myModalSave').modal();
+            }
+            //vallidation for the event when save button pressed
+            $('#btnSave').click(function () {
+                var msg="";
+
+                if ($('#txtSubject').val() == null) {
+                    if (!document.getElementById('Subject-msg').hasChildNodes()) {
+                        msg = document.createTextNode("נא לבחור סוג טיפול");
+                        document.getElementById('Subject-msg').appendChild(msg);
+                    }
+                }
+                else if ($('#textSubject').val() == undefined) {
+                    if (document.getElementById('Subject-msg').hasChildNodes()) {
+                        document.getElementById('Subject-msg').lastChild.remove();
+                    }
+                }
+
+                if ($('#txtCustomer').val() == null) {
+                    if (!document.getElementById('customer-msg').hasChildNodes()) {
+                        msg = document.createTextNode("נא לבחור לקוח/ה");
+                        document.getElementById('customer-msg').appendChild(msg);
+                    }
+                }
+                else if (document.getElementById('customer-msg').hasChildNodes()) {
+                        document.getElementById('customer-msg').lastChild.remove();
+                }
+
+                if ($('#txtStart').val() == "00:00") {
+                    if (!document.getElementById('start-msg').hasChildNodes()) {
+                        msg = document.createTextNode("נא לבחור שעת התחלה");
+                        document.getElementById('start-msg').appendChild(msg);
+                    }
+                    return;
+                }
+                else if (document.getElementById('start-msg').hasChildNodes()) {
+                    document.getElementById('start-msg').lastChild.remove();
+                }
+
+                var startDate = moment($('#txtDate').val() + " " + $('#txtStart').val(), "DD/MM/YYYY HH:mm").toDate();
+                var endDate = moment($('#txtDate').val() + " " + $('#txtEnd').val(), "DD/MM/YYYY HH:mm").toDate();
+                if (startDate >= endDate) {
+                    alert('הזמן הנבחר לא חוקי');
+                    return;
+                }
+              
+                    
+                
+                $('#txtDate').val(selectedEvent.start.format('YYYY-MM-DD'));
+
+                var data = {
+                    EventID: $('#hdEventID').val(),
+                    Subject: $('#txtSubject').val().trim(),
+                    StartTime: $('#txtDate').val().trim() + " " + $('#txtStart').val().trim(),
+                    EndTime: $('#txtDate').val().trim() + " " + $('#txtEnd').val().trim(),
+                    Description: $('#txtDescription').val(),
+                    ThemeColor: colorTm,
+                    Customer: $('#txtCustomer').val().trim(),
+                    Price: price
+                }
+                SaveEvent(data);// call function for submit data to the server
+            })
+
+            $('#txtStart').change(function () {
+                $('#txtEnd').val(moment($('#txtStart').val(), 'HH:mm').add(dauration, 'minutes').format('HH:mm'));
+            });
+
+            //submit data to the server
+            function SaveEvent(data) {
+
+                $.ajax({
+                    type: "POST",
+                    url: '/Calander/SaveEvent',
+                    data: data,
+                    success: function (data) {
+                        if (data.status) {
+                            //Refresh the calender
+                            FetchEventAndRenderCalendar();
+                            $('#myModalSave').modal('hide');
+                        }
+                    },
+                    error: function (result) {
+                        alert('Failed ' + result.message);
+                    }
+                })
+            }
+        })
+    </script>
+}
