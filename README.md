@@ -16,5 +16,10 @@ ASP.NET MVC 5 Web application uses Entity Framework for data access, Razor Pages
 
 ## Screenshots
 ### Main Screen
-![2022-07-07 14_55_26-](https://user-images.githubusercontent.com/31032862/177767872-2e2611b1-c40a-4e75-a153-04d2e53e7c9d.png)
+![1](https://user-images.githubusercontent.com/31032862/177776059-861ccdee-2fba-4329-8237-6d89198f1647.png)
 
+### Schedule Screen
+![2](https://user-images.githubusercontent.com/31032862/177776345-a562e7fa-339e-4138-b7fb-0f727c2d8f20.png)
+
+### profile Screen
+![3](https://user-images.githubusercontent.com/31032862/177776398-87aa2023-e4e9-45b4-bb0f-7e35e5871b86.png)
